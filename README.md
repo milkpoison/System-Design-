@@ -1,4 +1,5 @@
 # System-Design-
+
 module mat_mult_2x4_4x2 #(
     parameter DATA_WIDTH = 32,
     parameter SUM_WIDTH  = 32 + 3 + 1 // 32*32=64bit，累加4次，总和70bit，最后截断为32bit输出
