@@ -90,3 +90,43 @@ always_ff @(posedge clk or negedge rst_n) begin
 end
 
 endmodule
+
+
+
+# tb
+module tb_mat_mult;
+localparam DW = 32;
+localparam SW = 70;
+
+logic clk;
+logic rst_n;
+logic start;
+logic signed [DW-1:0] X[0:1][0:3];
+logic signed [DW-1:0] YT[0:3][0:1];
+logic done;
+logic signed [31:0] res_out[0:3];
+
+mat_mult_2x4_4x2 #(.DATA_WIDTH(DW),.SUM_WIDTH(SW)) dut(.*);
+
+initial begin
+    clk = 0;
+    forever #5 clk = ~clk;
+end
+
+initial begin
+    rst_n = 0;
+    start = 0;
+    #20 rst_n = 1;
+    X = '{ '{32'd1,32'd2,32'd3,32'd4}, '{32'd5,32'd6,32'd7,32'd8} };
+    YT = '{ '{32'd1,32'd2}, '{32'd3,32'd4}, '{32'd5,32'd6}, '{32'd7,32'd8} };
+
+    #10 start = 1;
+    #10 start = 0;
+    wait(done);
+    $display("res00=%0d, res01=%0d", res_out[0], res_out[1]);
+    $display("res10=%0d, res11=%0d", res_out[2], res_out[3]);
+    #50;
+    $finish;
+end
+endmodule
+
